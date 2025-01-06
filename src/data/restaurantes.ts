@@ -1,5 +1,9 @@
 import Japonesa from '../assets/restaurantes/japonesa.png'
 import Italiana from '../assets/restaurantes/italiana.png'
+import Hamburguer from '../assets/restaurantes/hamburguer.jpeg'
+import Pizza from '../assets/restaurantes/pizza.jpg'
+import Tropeiro from '../assets/restaurantes/tropeiro.jpg'
+import Peixe from '../assets/restaurantes/peixe.jpg'
 
 export const restaurantesData = [
     {
@@ -12,43 +16,43 @@ export const restaurantesData = [
     },
     {
       id: 2,
-      tipo: "Japonesa",
-      titulo: "Pizza di Roma",
-      nota: "4.5",
+      tipo: "Italiana",
+      titulo: "La Dolce Vita Trattoria",
+      nota: "4.8",
       descricao: "Autêntica pizza italiana com ingredientes selecionados e sabor inigualável. Experimente agora!",
       imagem: Italiana,
     },
     {
       id: 3,
-      tipo: "Japonesa",
-      titulo: "Burger King",
-      nota: "4.5",
+      tipo: "Sanduiche",
+      titulo: "Burger Plus",
+      nota: "4.6",
       descricao: "Os melhores hambúrgueres grelhados no fogo com sabores irresistíveis.",
-      imagem: "/path/to/imagem3.png",
+      imagem: Hamburguer,
     },
     {
       id: 4,
-      tipo: "Japonesa",
-      titulo: "Burger King",
-      nota: "4.5",
+      tipo: "Pizza",
+      titulo: "Pizza di Roma",
+      nota: "4.9",
       descricao: "Os melhores hambúrgueres grelhados no fogo com sabores irresistíveis.",
-      imagem: "/path/to/imagem3.png",
+      imagem: Pizza,
     },
     {
       id: 5,
-      tipo: "Japonesa",
-      titulo: "Burger King",
-      nota: "4.5",
+      tipo: "Mineira",
+      titulo: "Tropeirão do Juca",
+      nota: "4.4",
       descricao: "Os melhores hambúrgueres grelhados no fogo com sabores irresistíveis.",
-      imagem: "/path/to/imagem3.png",
+      imagem: Tropeiro,
     },
     {
       id: 6,
-      tipo: "Japonesa",
-      titulo: "Burger King",
-      nota: "4.5",
+      tipo: "Peixes",
+      titulo: "Frutos do Mar",
+      nota: "4.9",
       descricao: "Os melhores hambúrgueres grelhados no fogo com sabores irresistíveis.",
-      imagem: "/path/to/imagem3.png",
+      imagem: Peixe,
     },
   ];
   
