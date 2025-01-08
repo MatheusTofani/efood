@@ -6,6 +6,8 @@ import { pratosData } from "../../data/pratos.ts";
 import { CardPratos, Grid, ModalContent, Modalimage, PratoImage } from "./style.ts";
 import { Button } from "../../components/button/style.ts";
 import Modal from "../../components/modal";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../store/cartSlice"; 
 
 interface Prato {
   id: number;
@@ -23,6 +25,7 @@ const PratosRestaurante = () => {
     (prato) => prato.restauranteId === Number(id)
   );
 
+  const dispatch = useDispatch(); // Mova para dentro do componente
   const [selectedPrato, setSelectedPrato] = useState<Prato | null>(null);
 
   const handleOpenModal = (prato: Prato) => {
@@ -30,7 +33,13 @@ const PratosRestaurante = () => {
   };
 
   const handleCloseModal = () => {
-    setSelectedPrato(null);
+    setSelectedPrato(null); // Fecha o modal
+  };
+
+  const handleAddToCart = (prato: Prato) => {
+    const pratoComQuantidade = { ...prato, quantidade: 1 };
+    dispatch(addToCart(pratoComQuantidade)); // Adiciona o prato ao carrinho
+    handleCloseModal(); // Fecha o modal após adicionar ao carrinho
   };
 
   if (pratos.length === 0) {
@@ -67,7 +76,14 @@ const PratosRestaurante = () => {
           <ModalContent>
             <Title size="24px" weight="700" color="#fff">{selectedPrato.nome}</Title>
             <Title size="14px" weight="400" color="#fff">{selectedPrato.info}</Title>
-            <Button background="#fff" color="#e66767" width="218px">Adicionar ao carrinho - R$ {selectedPrato.valor.toFixed(2)}</Button>
+            <Button
+              background="#fff"
+              color="#e66767"
+              width="218px"
+              onClick={() => handleAddToCart(selectedPrato)}
+            >
+              Adicionar ao carrinho - R$ {selectedPrato.valor.toFixed(2)}
+            </Button>
           </ModalContent>
         </Modal>
       )}
