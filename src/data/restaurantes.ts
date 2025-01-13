@@ -2,8 +2,6 @@ import Japonesa from '../assets/restaurantes/japonesa.png'
 import Italiana from '../assets/restaurantes/italiana.png'
 import Hamburguer from '../assets/restaurantes/hamburguer.jpeg'
 import Pizza from '../assets/restaurantes/pizza.jpg'
-import Tropeiro from '../assets/restaurantes/tropeiro.jpg'
-import Peixe from '../assets/restaurantes/peixe.jpg'
 
 export const restaurantesData = [
     {

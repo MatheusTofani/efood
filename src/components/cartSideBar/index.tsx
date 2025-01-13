@@ -165,8 +165,6 @@ const Sidebar = ({
           },
         );
 
-        const responseData = await response.json();
-
         if (response.ok) {
           setOrderSuccess(true);
           dispatch({ type: "cart/clear" });
