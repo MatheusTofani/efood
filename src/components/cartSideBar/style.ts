@@ -84,6 +84,12 @@ export const Input = styled.input<WidthProps>`
  background-color: #FFEBD9;
  width: ${(props) => props.width || "auto"};
  padding-left: 8px;
+ border : 2px solid #E66767;
+
+ &:focus {
+   outline: none;
+   border: 2px solid rgb(179, 0, 0);
+ }
 `;
 
 export const InputContainer = styled.div`
