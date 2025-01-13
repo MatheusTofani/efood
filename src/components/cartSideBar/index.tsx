@@ -45,11 +45,11 @@ const Sidebar = ({
   });
 
   const [errors, setErrors] = useState<any>({});
-  const [orderSuccess, setOrderSuccess] = useState(false); // Estado para controlar a exibição da mensagem de sucesso
+  const [orderSuccess, setOrderSuccess] = useState(false);
 
   const total = cartItems.reduce(
     (acc: number, item: any) => acc + item.valor * item.quantidade,
-    0
+    0,
   );
 
   const validateDelivery = () => {
@@ -57,23 +57,23 @@ const Sidebar = ({
     const newErrors: any = {};
 
     if (!deliveryData.destinatário) {
-      newErrors.destinatário = "Campo obrigatório";
+      newErrors.destinatário = "Digite o nome";
       valid = false;
     }
     if (!deliveryData.endereço.descrição) {
-      newErrors.endereçoDescrição = "Campo obrigatório";
+      newErrors.endereçoDescrição = "Digite o endereço";
       valid = false;
     }
     if (!deliveryData.endereço.cidade) {
-      newErrors.endereçoCidade = "Campo obrigatório";
+      newErrors.endereçoCidade = "Digite a cidade";
       valid = false;
     }
     if (!deliveryData.endereço.CEP) {
-      newErrors.endereçoCEP = "Campo obrigatório";
+      newErrors.endereçoCEP = "Digite o CEP";
       valid = false;
     }
     if (!deliveryData.endereço.número) {
-      newErrors.endereçoNumero = "Campo obrigatório";
+      newErrors.endereçoNumero = "Digite o numero";
       valid = false;
     }
 
@@ -86,19 +86,19 @@ const Sidebar = ({
     const newErrors: any = {};
 
     if (!paymentData.nome) {
-      newErrors.nome = "Campo obrigatório";
+      newErrors.nome = "Digite o nome do cartão";
       valid = false;
     }
     if (!paymentData.número) {
-      newErrors.número = "Campo obrigatório";
+      newErrors.número = "Digite o número do cartão";
       valid = false;
     }
     if (!paymentData.CVC) {
-      newErrors.CVC = "Campo obrigatório";
+      newErrors.CVC = "Digite o CVC";
       valid = false;
     }
     if (!paymentData.validadeMes || !paymentData.validadeAno) {
-      newErrors.validade = "Campo obrigatório";
+      newErrors.validade = "Digite a validade";
       valid = false;
     }
 
@@ -153,9 +153,6 @@ const Sidebar = ({
         },
       };
 
-      // Logando os dados enviados para a API para verificar
-      console.log("Dados da ordem:", orderData);
-
       try {
         const response = await fetch(
           "https://fake-api-tau.vercel.app/api/efood/checkout",
@@ -165,17 +162,14 @@ const Sidebar = ({
               "Content-Type": "application/json",
             },
             body: JSON.stringify(orderData),
-          }
+          },
         );
 
         const responseData = await response.json();
 
-        console.log("Resposta da API:", responseData);
-
         if (response.ok) {
-          // Exibe a mensagem de sucesso dentro do Sidebar
           setOrderSuccess(true);
-          dispatch({ type: "cart/clear" }); // Limpar o carrinho após a compra
+          dispatch({ type: "cart/clear" });
         } else {
           alert("Erro ao processar o pedido. Tente novamente.");
         }
@@ -187,8 +181,10 @@ const Sidebar = ({
   };
 
   const handleCompleteOrder = () => {
-    // Resetando todos os estados
-    dispatch({ type: "cart/clear" }); // Limpar o carrinho
+    cartItems.forEach((item: any) => {
+      dispatch(removeFromCart(item.id));
+    });
+
     setDeliveryData({
       destinatário: "",
       endereço: {
@@ -198,17 +194,18 @@ const Sidebar = ({
         número: 0,
         complemento: "",
       },
-    }); // Resetando os dados de entrega
+    });
     setPaymentData({
       nome: "",
       número: "",
       validadeMes: "",
       validadeAno: "",
       CVC: "",
-    }); // Resetando os dados de pagamento
-    setErrors({}); // Limpando os erros
-    setOrderSuccess(false); // Resetando o estado de sucesso
-    onClose(); // Fechar o sidebar
+    });
+    setErrors({});
+    setOrderSuccess(false);
+    setStep("cart");
+    onClose();
   };
 
   return (
@@ -218,71 +215,105 @@ const Sidebar = ({
         <SidebarContent>
           {orderSuccess ? (
             <>
-            
-                <Title size="16px" weight="700" color="#FFEBD9" margin="0 0 16px 0">
-                  Compra realizada com sucesso!
-                </Title>
+              <Title
+                size='16px'
+                weight='700'
+                color='#FFEBD9'
+                margin='0 0 10px 0'
+              >
+                {" "}
+                Pedido realizado{" "}
+              </Title>
+              <Title
+                size='14px'
+                weight='400'
+                color='#FFEBD9'
+                margin='0 0 16px 0'
+              >
+                Estamos felizes em informar que seu pedido já está em processo
+                de preparação e, em breve, será entregue no endereço fornecido.
+                Gostaríamos de ressaltar que nossos entregadores não estão
+                autorizados a realizar cobranças extras. Lembre-se da
+                importância de higienizar as mãos após o recebimento do pedido,
+                garantindo assim sua segurança e bem-estar durante a refeição.
+                Esperamos que desfrute de uma deliciosa e agradável experiência
+                gastronômica. Bom apetite!
+              </Title>
+              <InputContainer>
                 <Button
-                  width="100%"
-                  background="#FFEBD9"
-                  color="#E66767"
+                  width='100%'
+                  background='#FFEBD9'
+                  color='#E66767'
                   onClick={handleCompleteOrder}
                 >
                   Concluir
                 </Button>
-      
+              </InputContainer>
             </>
           ) : (
             <>
               {step === "cart" && (
                 <>
-                  {cartItems.map((item: any) => (
-                    <SidebarItem key={item.id}>
-                      <img src={item.imagem} alt={item.nome} />
-                      <div>
-                        <Title margin="0 0 16px 0" weight="900" size="18px">
-                          {item.nome}
-                        </Title>
-                        <Title weight="400" size="14px">
-                          R$ {item.valor.toFixed(2)}
-                        </Title>
-                      </div>
-                      <p onClick={() => dispatch(removeFromCart(item.id))}>
-                        <FaRegTrashAlt />
-                      </p>
-                    </SidebarItem>
-                  ))}
-                  <SidebarFooter>
-                    <Title color="#FFEBD9" size="16px" weight="700">
-                      Valor Total:
+                  {cartItems.length === 0 ? (
+                    <Title size='16px' weight='700' color='#FFEBD9'>
+                      Carrinho Vazio
                     </Title>
-                    <Title color="#FFEBD9" size="16px" weight="700">
-                      R$ {total.toFixed(2)}
-                    </Title>
-                  </SidebarFooter>
-                  <SidebarFooter>
-                    <Button
-                      width="100%"
-                      background="#FFEBD9"
-                      color="#E66767"
-                      onClick={handleSubmit}
-                    >
-                      Continuar com a entrega
-                    </Button>
-                  </SidebarFooter>
+                  ) : (
+                    <>
+                      {cartItems.map((item: any) => (
+                        <SidebarItem key={item.id}>
+                          <img src={item.imagem} alt={item.nome} />
+                          <div>
+                            <Title margin='0 0 16px 0' weight='900' size='18px'>
+                              {item.nome}
+                            </Title>
+                            <Title weight='400' size='14px'>
+                              R$ {item.valor.toFixed(2)}
+                            </Title>
+                          </div>
+                          <p onClick={() => dispatch(removeFromCart(item.id))}>
+                            <FaRegTrashAlt />
+                          </p>
+                        </SidebarItem>
+                      ))}
+                      <SidebarFooter>
+                        <Title color='#FFEBD9' size='16px' weight='700'>
+                          Valor Total:
+                        </Title>
+                        <Title color='#FFEBD9' size='16px' weight='700'>
+                          R$ {total.toFixed(2)}
+                        </Title>
+                      </SidebarFooter>
+                      <SidebarFooter>
+                        <Button
+                          width='100%'
+                          background='#FFEBD9'
+                          color='#E66767'
+                          onClick={handleSubmit}
+                        >
+                          Continuar com a entrega
+                        </Button>
+                      </SidebarFooter>
+                    </>
+                  )}
                 </>
               )}
 
               {step === "delivery" && (
                 <>
-                  <Title size="16px" weight="700" color="#FFEBD9" margin="0 0 16px 0">
+                  <Title
+                    size='16px'
+                    weight='700'
+                    color='#FFEBD9'
+                    margin='0 0 16px 0'
+                  >
                     Entrega
                   </Title>
                   <Pagamento>
                     <InputContainer>
                       <label>Quem irá receber:</label>
                       <Input
-                        type="text"
+                        type='text'
                         required
                         value={deliveryData.destinatário}
                         onChange={(e) =>
@@ -292,12 +323,14 @@ const Sidebar = ({
                           })
                         }
                       />
-                      {errors.destinatário && <span>{errors.destinatário}</span>}
+                      {errors.destinatário && (
+                        <span>{errors.destinatário}</span>
+                      )}
                     </InputContainer>
                     <InputContainer>
                       <label>Endereço:</label>
                       <Input
-                        type="text"
+                        type='text'
                         required
                         value={deliveryData.endereço.descrição}
                         onChange={(e) =>
@@ -310,12 +343,14 @@ const Sidebar = ({
                           })
                         }
                       />
-                      {errors.endereçoDescrição && <span>{errors.endereçoDescrição}</span>}
+                      {errors.endereçoDescrição && (
+                        <span>{errors.endereçoDescrição}</span>
+                      )}
                     </InputContainer>
                     <InputContainer>
                       <label>Cidade:</label>
                       <Input
-                        type="text"
+                        type='text'
                         required
                         value={deliveryData.endereço.cidade}
                         onChange={(e) =>
@@ -328,7 +363,9 @@ const Sidebar = ({
                           })
                         }
                       />
-                      {errors.endereçoCidade && <span>{errors.endereçoCidade}</span>}
+                      {errors.endereçoCidade && (
+                        <span>{errors.endereçoCidade}</span>
+                      )}
                     </InputContainer>
                     <InputContainer>
                       <label>CEP:</label>
@@ -362,7 +399,9 @@ const Sidebar = ({
                           })
                         }
                       />
-                      {errors.endereçoNumero && <span>{errors.endereçoNumero}</span>}
+                      {errors.endereçoNumero && (
+                        <span>{errors.endereçoNumero}</span>
+                      )}
                     </InputContainer>
                     <InputContainer>
                       <label>Complemento (opcional):</label>
@@ -380,39 +419,48 @@ const Sidebar = ({
                       />
                     </InputContainer>
                     <Button
-                      width="100%"
-                      background="#FFEBD9"
-                      color="#E66767"
+                      width='100%'
+                      background='#FFEBD9'
+                      color='#E66767'
                       onClick={handleSubmit}
                     >
                       Avançar para o Pagamento
                     </Button>
+
+                    <Button
+                      width='100%'
+                      background='#FFEBD9'
+                      color='#E66767'
+                      onClick={() => setStep("cart")}
+                    >
+                      Voltar para o Carrinho
+                    </Button>
                   </Pagamento>
-                  <Button
-                    width="100%"
-                    background="#FFEBD9"
-                    color="#E66767"
-                    onClick={() => setStep("cart")}
-                  >
-                    Voltar para o Carrinho
-                  </Button>
                 </>
               )}
 
               {step === "payment" && (
                 <>
-                  <Title size="16px" weight="700" color="#FFEBD9" margin="0 0 16px 0">
+                  <Title
+                    size='16px'
+                    weight='700'
+                    color='#FFEBD9'
+                    margin='0 0 16px 0'
+                  >
                     Pagamento
                   </Title>
                   <Pagamento>
                     <InputContainer>
                       <label>Nome no Cartão:</label>
                       <Input
-                        type="text"
+                        type='text'
                         required
                         value={paymentData.nome}
                         onChange={(e) =>
-                          setPaymentData({ ...paymentData, nome: e.target.value })
+                          setPaymentData({
+                            ...paymentData,
+                            nome: e.target.value,
+                          })
                         }
                       />
                       {errors.nome && <span>{errors.nome}</span>}
@@ -420,11 +468,14 @@ const Sidebar = ({
                     <InputContainer>
                       <label>Número do Cartão:</label>
                       <Input
-                        type="text"
+                        type='text'
                         required
                         value={paymentData.número}
                         onChange={(e) =>
-                          setPaymentData({ ...paymentData, número: e.target.value })
+                          setPaymentData({
+                            ...paymentData,
+                            número: e.target.value,
+                          })
                         }
                       />
                       {errors.número && <span>{errors.número}</span>}
@@ -432,54 +483,59 @@ const Sidebar = ({
                     <InputContainer>
                       <label>CVC:</label>
                       <Input
-                        type="text"
+                        type='text'
                         required
                         value={paymentData.CVC}
                         onChange={(e) =>
-                          setPaymentData({ ...paymentData, CVC: e.target.value })
+                          setPaymentData({
+                            ...paymentData,
+                            CVC: e.target.value,
+                          })
                         }
                       />
                       {errors.CVC && <span>{errors.CVC}</span>}
                     </InputContainer>
-                    <InputContent>
-                      <InputContainer>
-                        <label>Validade (Mês/Ano):</label>
+                    <InputContainer>
+                      <label>Validade:</label>
+                      <InputContent>
                         <Input
-                          placeholder="MM"
+                          type='text'
+                          maxLength={2}
+                          placeholder='MM'
                           required
                           value={paymentData.validadeMes}
                           onChange={(e) =>
-                            setPaymentData({ ...paymentData, validadeMes: e.target.value })
+                            setPaymentData({
+                              ...paymentData,
+                              validadeMes: e.target.value,
+                            })
                           }
                         />
                         <Input
-                          placeholder="AAAA"
+                          type='text'
+                          maxLength={4}
+                          placeholder='AA'
                           required
                           value={paymentData.validadeAno}
                           onChange={(e) =>
-                            setPaymentData({ ...paymentData, validadeAno: e.target.value })
+                            setPaymentData({
+                              ...paymentData,
+                              validadeAno: e.target.value,
+                            })
                           }
                         />
-                        {errors.validade && <span>{errors.validade}</span>}
-                      </InputContainer>
-                    </InputContent>
+                      </InputContent>
+                      {errors.validade && <span>{errors.validade}</span>}
+                    </InputContainer>
                     <Button
-                      width="100%"
-                      background="#FFEBD9"
-                      color="#E66767"
+                      width='100%'
+                      background='#FFEBD9'
+                      color='#E66767'
                       onClick={handleSubmit}
                     >
                       Finalizar Compra
                     </Button>
                   </Pagamento>
-                  <Button
-                    width="100%"
-                    background="#FFEBD9"
-                    color="#E66767"
-                    onClick={() => setStep("delivery")}
-                  >
-                    Voltar para a Entrega
-                  </Button>
                 </>
               )}
             </>

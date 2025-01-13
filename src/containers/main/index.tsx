@@ -1,11 +1,11 @@
-import { Container } from "../../components/container/style";
+
 import Restaurantes from "../../components/restaurantes";
 import { restaurantesData } from "../../data/restaurantes";
 import { Grid } from "./style";
 
 const Main = () => {
   return (
-    <Container>
+   
       <Grid>
       {restaurantesData.map((restaurante) => (
         <Restaurantes
@@ -19,7 +19,7 @@ const Main = () => {
         />
       ))}
       </Grid>
-    </Container>
+  
   );
 };
 

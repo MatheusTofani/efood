@@ -38,21 +38,6 @@ export const restaurantesData = [
       descricao: "Os melhores hambúrgueres grelhados no fogo com sabores irresistíveis.",
       imagem: Pizza,
     },
-    {
-      id: 5,
-      tipo: "Mineira",
-      titulo: "Tropeirão do Juca",
-      nota: "4.4",
-      descricao: "Os melhores hambúrgueres grelhados no fogo com sabores irresistíveis.",
-      imagem: Tropeiro,
-    },
-    {
-      id: 6,
-      tipo: "Peixes",
-      titulo: "Frutos do Mar",
-      nota: "4.9",
-      descricao: "Os melhores hambúrgueres grelhados no fogo com sabores irresistíveis.",
-      imagem: Peixe,
-    },
+   
   ];
   

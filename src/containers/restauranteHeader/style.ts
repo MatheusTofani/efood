@@ -11,6 +11,10 @@ export const RestauranteContainer = styled.div<{ backgroundImage: string }>`
   flex-direction: column;
   justify-content: space-between;
 
+  @media (max-width: 1024px) {
+    padding: 25px 10px;
+  }
+
   &::before {
     content: "";
     position: absolute;

@@ -15,4 +15,9 @@ export const Button = styled.a<ButtonProps>`
   font-weight: 700;
   width: ${(props) => props.width || "82px"};
   text-align: center;
+  transition: 0.3s ease;
+
+  &:hover {
+    background-color:rgb(223, 153, 153);
+  }
 `;

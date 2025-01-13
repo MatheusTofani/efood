@@ -6,6 +6,11 @@ height:398px;
 background-color: #fff;
 border: solid 1px #E66767;
 position: relative;
+overflow-y: hidden;
+
+@media (max-width: 1024px) {
+width: 100%;
+}
 `
 export const RestauranteImage = styled.img`
 width: 100%;

@@ -25,7 +25,7 @@ const PratosRestaurante = () => {
     (prato) => prato.restauranteId === Number(id)
   );
 
-  const dispatch = useDispatch(); // Mova para dentro do componente
+  const dispatch = useDispatch(); 
   const [selectedPrato, setSelectedPrato] = useState<Prato | null>(null);
 
   const handleOpenModal = (prato: Prato) => {
@@ -33,13 +33,13 @@ const PratosRestaurante = () => {
   };
 
   const handleCloseModal = () => {
-    setSelectedPrato(null); // Fecha o modal
+    setSelectedPrato(null); 
   };
 
   const handleAddToCart = (prato: Prato) => {
     const pratoComQuantidade = { ...prato, quantidade: 1 };
-    dispatch(addToCart(pratoComQuantidade)); // Adiciona o prato ao carrinho
-    handleCloseModal(); // Fecha o modal após adicionar ao carrinho
+    dispatch(addToCart(pratoComQuantidade)); 
+    handleCloseModal(); 
   };
 
   if (pratos.length === 0) {

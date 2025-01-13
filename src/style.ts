@@ -8,6 +8,10 @@ export const GlobalStyle = createGlobalStyle`
     padding: 0;
     box-sizing: border-box;
     font-family: 'roboto', sans-serif;
+   
+    @media (max-width: 1024px) {
+        overflow-x: hidden;
+    }
 }
 
 

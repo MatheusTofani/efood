@@ -9,4 +9,16 @@ padding: 0 171px;
 display: flex;
 justify-content: space-between;
 align-items: center;
+
+@media (max-width: 1024px) {
+    padding: 0 10px;
+}
+`
+
+export const TitleContainer = styled.div`
+transition: 0.3s ease;
+  &:hover {
+   color:rgb(223, 153, 153) ; 
+   cursor: pointer;
+  }
 `

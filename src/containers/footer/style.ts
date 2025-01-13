@@ -21,6 +21,12 @@ display: flex;
 align-items: center;
 justify-content: center;
 font-size: 20px;
+
+
+:hover {
+    cursor: pointer;
+    color:rgb(58, 40, 40);
+}
 `
 
 export const RedesContainer = styled.div`

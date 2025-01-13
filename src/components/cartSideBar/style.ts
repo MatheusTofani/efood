@@ -91,6 +91,11 @@ export const InputContainer = styled.div`
   flex-direction: column;
 `;
 
+export const InputFlex = styled.div`
+  display: flex;
+justify-content: space-between;
+`;
+
 export const InputContent = styled.div`
   display: flex;
   justify-content: space-between;

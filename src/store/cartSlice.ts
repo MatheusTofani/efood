@@ -1,15 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// Definir o tipo de item do carrinho
 interface CartItem {
   id: number;
   nome: string;
-  imagem: string;
   valor: number;
   quantidade: number;
+  imagem: string;
 }
 
-// Definir o estado inicial do carrinho
 interface CartState {
   items: CartItem[];
 }
@@ -18,24 +16,22 @@ const initialState: CartState = {
   items: [],
 };
 
-// Criação do slice para o carrinho
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
-      const existingItem = state.items.find((item) => item.id === action.payload.id);
-      if (existingItem) {
-        existingItem.quantidade += action.payload.quantidade;
-      } else {
-        state.items.push(action.payload);
-      }
+      state.items.push({ ...action.payload });
     },
     removeFromCart: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter((item) => item.id !== action.payload);
+      const index = state.items.findIndex((item) => item.id === action.payload);
+      if (index !== -1) {
+        state.items.splice(index, 1); 
+      }
     },
+    
     clearCart: (state) => {
-      state.items = []; // Limpa todos os itens do carrinho
+      state.items = [];
     },
   },
 });

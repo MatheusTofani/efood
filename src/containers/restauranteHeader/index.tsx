@@ -15,8 +15,8 @@ const RestauranteHeader = () => {
     <RestauranteContainer
       backgroundImage={restaurante.imagem}
     >
-        <Title color="#fff" size="32px" weight="100">{restaurante.tipo}</Title>
-        <Title size="32px" color="#fff" weight="900">{restaurante.titulo}</Title>
+        <Title color="#fff" size="32px" width="100%" weight="100">{restaurante.tipo}</Title>
+        <Title size="32px" color="#fff" width="100%" weight="900">{restaurante.titulo}</Title>
     </RestauranteContainer>
   );
 };

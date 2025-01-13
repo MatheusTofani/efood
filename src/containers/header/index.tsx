@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Logo from "../../components/logo";
 import { Title } from "../../components/title/style";
-import { HeaderContainer } from "./style";
+import { HeaderContainer, TitleContainer } from "./style";
 import CartSidebar from "../../components/cartSideBar";
 
 const Header = () => {
@@ -27,6 +27,7 @@ const Header = () => {
   return (
     <>
       <HeaderContainer>
+       
         <Title
           center="center"
           size="20px"
@@ -34,8 +35,11 @@ const Header = () => {
           onClick={handleGoBack}
           color="#E66767"
         >
+         <TitleContainer>
           Restaurantes
+          </TitleContainer>
         </Title>
+      
         <Logo />
         <Title
           center="center"
@@ -43,7 +47,9 @@ const Header = () => {
           weight="500"
           onClick={toggleCart}
         >
+           <TitleContainer>
           Carrinho ({totalItems})
+          </TitleContainer>
         </Title>
       </HeaderContainer>
       <CartSidebar isOpen={isCartOpen} onClose={toggleCart} />
