@@ -3,6 +3,7 @@ import { Title } from "../title/style";
 import { Button } from "../button/style";
 import { useNavigate } from "react-router-dom";
 import Star from "../../assets/estrela.png";
+
 interface RestaurantesProps {
   id: number;
   titulo: string;
@@ -26,7 +27,7 @@ const Restaurantes: React.FC<RestaurantesProps> = ({ id, titulo, nota, descricao
       <Content>
         <ContainerTitle>
           <Title size="18px" weight="700">{titulo}</Title>
-          <Feedback >
+          <Feedback>
             <Title size="18px" weight="700">{nota}</Title>
             <Estrela src={Star} alt="Estrela" />
           </Feedback>

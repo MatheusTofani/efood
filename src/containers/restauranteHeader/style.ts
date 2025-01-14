@@ -25,4 +25,3 @@ export const RestauranteContainer = styled.div<{ backgroundImage: string }>`
     background-color: rgba(0, 0, 0, 0.5);
   }
 `;
-

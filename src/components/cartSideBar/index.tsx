@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromCart } from "../../store/cartSlice";
+import * as yup from "yup";
 import {
   SidebarContainer,
   SidebarOverlay,
@@ -15,6 +16,58 @@ import {
 import { Title } from "../title/style";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { Button } from "../button/style";
+import InputMask from "react-input-mask";
+
+
+const deliverySchema = yup.object().shape({
+  destinatário: yup.string().required("Digite o nome"),
+  endereço: yup.object().shape({
+    descrição: yup.string().required("Digite o endereço"),
+    cidade: yup.string().required("Digite a cidade"),
+    CEP: yup
+      .string()
+      .matches(/^\d{5}-?\d{3}$/, "Digite um CEP válido")
+      .required("Digite o CEP"),
+    número: yup
+      .string()
+      .typeError("Digite um número válido")
+      .required("Digite o número"),
+    complemento: yup.string(),
+  }),
+});
+
+const paymentSchema = yup.object().shape({
+  nome: yup.string().required("Digite o nome no cartão"),
+  número: yup
+    .string()
+    .matches(/^\d{4} \d{4} \d{4} \d{4}$/, "Digite um número de cartão válido")
+    .required("Digite o número do cartão"),
+  validadeMes: yup
+    .string()
+    .matches(/^(0[1-9]|1[0-2])$/, "Digite um mês válido")
+    .required("Digite o mês de validade"),
+  validadeAno: yup
+    .string()
+    .matches(/^\d{4}$/, "Digite um ano válido")
+    .required("Digite o ano de validade")
+    .test("validity-test", "A data de validade é inválida", (value, context) => {
+      const mes = parseInt(context.parent.validadeMes, 10);
+      const ano = parseInt(value, 10);
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth() + 1;
+
+      if (ano < currentYear || (ano === currentYear && mes < currentMonth)) {
+        return false;
+      }
+      return true;
+    }),
+  CVC: yup
+    .string()
+    .matches(/^\d{3}$/, "Digite um CVC válido")
+    .required("Digite o CVC"),
+});
+
 
 const Sidebar = ({
   isOpen,
@@ -32,7 +85,7 @@ const Sidebar = ({
       descrição: "",
       cidade: "",
       CEP: "",
-      número: 0,
+      número: "",
       complemento: "",
     },
   });
@@ -49,61 +102,37 @@ const Sidebar = ({
 
   const total = cartItems.reduce(
     (acc: number, item: any) => acc + item.valor * item.quantidade,
-    0,
+    0
   );
 
-  const validateDelivery = () => {
-    let valid = true;
-    const newErrors: any = {};
-
-    if (!deliveryData.destinatário) {
-      newErrors.destinatário = "Digite o nome";
-      valid = false;
+  const validateDelivery = async () => {
+    try {
+      await deliverySchema.validate(deliveryData, { abortEarly: false });
+      setErrors({});
+      return true;
+    } catch (err: any) {
+      const newErrors: any = {};
+      err.inner.forEach((error: any) => {
+        newErrors[error.path] = error.message;
+      });
+      setErrors(newErrors);
+      return false;
     }
-    if (!deliveryData.endereço.descrição) {
-      newErrors.endereçoDescrição = "Digite o endereço";
-      valid = false;
-    }
-    if (!deliveryData.endereço.cidade) {
-      newErrors.endereçoCidade = "Digite a cidade";
-      valid = false;
-    }
-    if (!deliveryData.endereço.CEP) {
-      newErrors.endereçoCEP = "Digite o CEP";
-      valid = false;
-    }
-    if (!deliveryData.endereço.número) {
-      newErrors.endereçoNumero = "Digite o numero";
-      valid = false;
-    }
-
-    setErrors(newErrors);
-    return valid;
   };
 
-  const validatePayment = () => {
-    let valid = true;
-    const newErrors: any = {};
-
-    if (!paymentData.nome) {
-      newErrors.nome = "Digite o nome do cartão";
-      valid = false;
+  const validatePayment = async () => {
+    try {
+      await paymentSchema.validate(paymentData, { abortEarly: false });
+      setErrors({});
+      return true;
+    } catch (err: any) {
+      const newErrors: any = {};
+      err.inner.forEach((error: any) => {
+        newErrors[error.path] = error.message;
+      });
+      setErrors(newErrors);
+      return false;
     }
-    if (!paymentData.número) {
-      newErrors.número = "Digite o número do cartão";
-      valid = false;
-    }
-    if (!paymentData.CVC) {
-      newErrors.CVC = "Digite o CVC";
-      valid = false;
-    }
-    if (!paymentData.validadeMes || !paymentData.validadeAno) {
-      newErrors.validade = "Digite a validade";
-      valid = false;
-    }
-
-    setErrors(newErrors);
-    return valid;
   };
 
   const handleSubmit = async () => {
@@ -113,7 +142,7 @@ const Sidebar = ({
     }
 
     if (step === "delivery") {
-      if (!validateDelivery()) {
+      if (!(await validateDelivery())) {
         return;
       }
       setStep("payment");
@@ -121,7 +150,7 @@ const Sidebar = ({
     }
 
     if (step === "payment") {
-      if (!validatePayment()) {
+      if (!(await validatePayment())) {
         return;
       }
 
@@ -162,7 +191,7 @@ const Sidebar = ({
               "Content-Type": "application/json",
             },
             body: JSON.stringify(orderData),
-          },
+          }
         );
 
         if (response.ok) {
@@ -189,7 +218,7 @@ const Sidebar = ({
         descrição: "",
         cidade: "",
         CEP: "",
-        número: 0,
+        número: "",
         complemento: "",
       },
     });
@@ -205,7 +234,6 @@ const Sidebar = ({
     setStep("cart");
     onClose();
   };
-
   return (
     <>
       {isOpen && <SidebarOverlay onClick={onClose} />}
@@ -321,10 +349,9 @@ const Sidebar = ({
                           })
                         }
                       />
-                      {errors.destinatário && (
-                        <span>{errors.destinatário}</span>
-                      )}
+                      {errors.destinatário && <span>{errors.destinatário}</span>}
                     </InputContainer>
+
                     <InputContainer>
                       <label>Endereço:</label>
                       <Input
@@ -341,10 +368,9 @@ const Sidebar = ({
                           })
                         }
                       />
-                      {errors.endereçoDescrição && (
-                        <span>{errors.endereçoDescrição}</span>
-                      )}
+                      {errors["endereço.descrição"] && <span>{errors["endereço.descrição"]}</span>}
                     </InputContainer>
+
                     <InputContainer>
                       <label>Cidade:</label>
                       <Input
@@ -361,10 +387,9 @@ const Sidebar = ({
                           })
                         }
                       />
-                      {errors.endereçoCidade && (
-                        <span>{errors.endereçoCidade}</span>
-                      )}
+                      {errors["endereço.cidade"] && <span>{errors["endereço.cidade"]}</span>}
                     </InputContainer>
+
                     <InputContainer>
                       <label>CEP:</label>
                       <Input
@@ -380,8 +405,9 @@ const Sidebar = ({
                           })
                         }
                       />
-                      {errors.endereçoCEP && <span>{errors.endereçoCEP}</span>}
+                      {errors["endereço.CEP"] && <span>{errors["endereço.CEP"]}</span>}
                     </InputContainer>
+
                     <InputContainer>
                       <label>Número:</label>
                       <Input
@@ -392,15 +418,14 @@ const Sidebar = ({
                             ...deliveryData,
                             endereço: {
                               ...deliveryData.endereço,
-                              número: parseInt(e.target.value),
+                              número: e.target.value,
                             },
                           })
                         }
                       />
-                      {errors.endereçoNumero && (
-                        <span>{errors.endereçoNumero}</span>
-                      )}
+                      {errors["endereço.número"] && <span>{errors["endereço.número"]}</span>}
                     </InputContainer>
+
                     <InputContainer>
                       <label>Complemento (opcional):</label>
                       <Input
@@ -416,6 +441,7 @@ const Sidebar = ({
                         }
                       />
                     </InputContainer>
+
                     <Button
                       width='100%'
                       background='#FFEBD9'
@@ -465,8 +491,8 @@ const Sidebar = ({
                     </InputContainer>
                     <InputContainer>
                       <label>Número do Cartão:</label>
-                      <Input
-                        type='text'
+                      <InputMask
+                        mask="9999 9999 9999 9999"
                         required
                         value={paymentData.número}
                         onChange={(e) =>
@@ -475,13 +501,21 @@ const Sidebar = ({
                             número: e.target.value,
                           })
                         }
-                      />
+                      >
+                        {(inputProps: any) => (
+                          <Input
+                            {...inputProps}
+                            required
+                          />
+                        )}
+                      </InputMask>
                       {errors.número && <span>{errors.número}</span>}
                     </InputContainer>
+
                     <InputContainer>
                       <label>CVC:</label>
-                      <Input
-                        type='text'
+                      <InputMask
+                        mask="999"
                         required
                         value={paymentData.CVC}
                         onChange={(e) =>
@@ -490,16 +524,23 @@ const Sidebar = ({
                             CVC: e.target.value,
                           })
                         }
-                      />
+                      >
+                        {(inputProps: any) => (
+                          <Input
+                            {...inputProps}
+                            required
+                          />
+                        )}
+                      </InputMask>
                       {errors.CVC && <span>{errors.CVC}</span>}
                     </InputContainer>
+
                     <InputContainer>
                       <label>Validade:</label>
                       <InputContent>
-                        <Input
-                          type='text'
-                          maxLength={2}
-                          placeholder='MM'
+                        <InputMask
+                          mask="99"
+                          placeholder="MM"
                           required
                           value={paymentData.validadeMes}
                           onChange={(e) =>
@@ -508,11 +549,13 @@ const Sidebar = ({
                               validadeMes: e.target.value,
                             })
                           }
-                        />
-                        <Input
-                          type='text'
-                          maxLength={4}
-                          placeholder='AA'
+                        >
+                          {(inputProps: any) => <Input {...inputProps} />}
+                        </InputMask>
+
+                        <InputMask
+                          mask="9999"
+                          placeholder="AAAA"
                           required
                           value={paymentData.validadeAno}
                           onChange={(e) =>
@@ -521,10 +564,15 @@ const Sidebar = ({
                               validadeAno: e.target.value,
                             })
                           }
-                        />
+                        >
+                          {(inputProps: any) => <Input {...inputProps} />}
+                        </InputMask>
                       </InputContent>
-                      {errors.validade && <span>{errors.validade}</span>}
+                      {errors.validadeMes || errors.validadeAno ? (
+                        <span>{errors.validadeMes || errors.validadeAno}</span>
+                      ) : null}
                     </InputContainer>
+
                     <Button
                       width='100%'
                       background='#FFEBD9'
