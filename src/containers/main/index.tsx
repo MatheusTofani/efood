@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import Restaurantes from "../../components/restaurantes";
 import { Grid } from "./style";
 
