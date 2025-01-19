@@ -12,6 +12,7 @@ import {
   InputContainer,
   Input,
   InputContent,
+  Flex,
 } from "./style";
 import { Title } from "../title/style";
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -248,7 +249,7 @@ const Sidebar = ({
                 margin='0 0 10px 0'
               >
                 {" "}
-                Pedido realizado{" "}
+                Pedido realizado
               </Title>
               <Title
                 size='14px'
@@ -256,14 +257,15 @@ const Sidebar = ({
                 color='#FFEBD9'
                 margin='0 0 16px 0'
               >
-                Estamos felizes em informar que seu pedido já está em processo
-                de preparação e, em breve, será entregue no endereço fornecido.
-                Gostaríamos de ressaltar que nossos entregadores não estão
-                autorizados a realizar cobranças extras. Lembre-se da
-                importância de higienizar as mãos após o recebimento do pedido,
-                garantindo assim sua segurança e bem-estar durante a refeição.
-                Esperamos que desfrute de uma deliciosa e agradável experiência
-                gastronômica. Bom apetite!
+                <p>  Estamos felizes em informar que seu pedido já está em processo de preparação e, em breve, será entregue no endereço fornecido.</p>
+                <br />
+                <p>Gostaríamos de ressaltar que nossos entregadores não estão autorizados a realizar cobranças extras. </p>
+                <br />
+                <p>
+                  Lembre-se da importância de higienizar as mãos após o recebimento do pedido, garantindo assim sua segurança e bem-estar durante a refeição.</p>
+                <br />
+                <p>
+                  Esperamos que desfrute de uma deliciosa e agradável experiência gastronômica. Bom apetite!</p>
               </Title>
               <InputContainer>
                 <Button
@@ -389,43 +391,43 @@ const Sidebar = ({
                       />
                       {errors["endereço.cidade"] && <span>{errors["endereço.cidade"]}</span>}
                     </InputContainer>
+                    <Flex>
+                      <InputContainer>
+                        <label>CEP:</label>
+                        <Input
+                          required
+                          value={deliveryData.endereço.CEP}
+                          onChange={(e) =>
+                            setDeliveryData({
+                              ...deliveryData,
+                              endereço: {
+                                ...deliveryData.endereço,
+                                CEP: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                        {errors["endereço.CEP"] && <span>{errors["endereço.CEP"]}</span>}
+                      </InputContainer>
 
-                    <InputContainer>
-                      <label>CEP:</label>
-                      <Input
-                        required
-                        value={deliveryData.endereço.CEP}
-                        onChange={(e) =>
-                          setDeliveryData({
-                            ...deliveryData,
-                            endereço: {
-                              ...deliveryData.endereço,
-                              CEP: e.target.value,
-                            },
-                          })
-                        }
-                      />
-                      {errors["endereço.CEP"] && <span>{errors["endereço.CEP"]}</span>}
-                    </InputContainer>
-
-                    <InputContainer>
-                      <label>Número:</label>
-                      <Input
-                        required
-                        value={deliveryData.endereço.número}
-                        onChange={(e) =>
-                          setDeliveryData({
-                            ...deliveryData,
-                            endereço: {
-                              ...deliveryData.endereço,
-                              número: e.target.value,
-                            },
-                          })
-                        }
-                      />
-                      {errors["endereço.número"] && <span>{errors["endereço.número"]}</span>}
-                    </InputContainer>
-
+                      <InputContainer>
+                        <label>Número:</label>
+                        <Input
+                          required
+                          value={deliveryData.endereço.número}
+                          onChange={(e) =>
+                            setDeliveryData({
+                              ...deliveryData,
+                              endereço: {
+                                ...deliveryData.endereço,
+                                número: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                        {errors["endereço.número"] && <span>{errors["endereço.número"]}</span>}
+                      </InputContainer>
+                    </Flex>
                     <InputContainer>
                       <label>Complemento (opcional):</label>
                       <Input
@@ -489,73 +491,83 @@ const Sidebar = ({
                       />
                       {errors.nome && <span>{errors.nome}</span>}
                     </InputContainer>
-                    <InputContainer>
-                      <label>Número do Cartão:</label>
-                      <InputMask
-                        mask="9999 9999 9999 9999"
-                        required
-                        value={paymentData.número}
-                        onChange={(e) =>
-                          setPaymentData({
-                            ...paymentData,
-                            número: e.target.value,
-                          })
-                        }
-                      >
-                        {(inputProps: any) => (
-                          <Input
-                            {...inputProps}
-                            required
-                          />
-                        )}
-                      </InputMask>
-                      {errors.número && <span>{errors.número}</span>}
-                    </InputContainer>
-
-                    <InputContainer>
-                      <label>CVC:</label>
-                      <InputMask
-                        mask="999"
-                        required
-                        value={paymentData.CVC}
-                        onChange={(e) =>
-                          setPaymentData({
-                            ...paymentData,
-                            CVC: e.target.value,
-                          })
-                        }
-                      >
-                        {(inputProps: any) => (
-                          <Input
-                            {...inputProps}
-                            required
-                          />
-                        )}
-                      </InputMask>
-                      {errors.CVC && <span>{errors.CVC}</span>}
-                    </InputContainer>
-
-                    <InputContainer>
-                      <label>Validade:</label>
-                      <InputContent>
+                    <Flex>
+                      <InputContainer width="70%">
+                        <label>Número do Cartão:</label>
                         <InputMask
-                          mask="99"
-                          placeholder="MM"
+                          mask="9999 9999 9999 9999"
                           required
-                          value={paymentData.validadeMes}
+                          value={paymentData.número}
                           onChange={(e) =>
                             setPaymentData({
                               ...paymentData,
-                              validadeMes: e.target.value,
+                              número: e.target.value,
                             })
                           }
                         >
-                          {(inputProps: any) => <Input {...inputProps} />}
+                          {(inputProps: any) => (
+                            <Input
+                              {...inputProps}
+                              required
+                            />
+                          )}
                         </InputMask>
+                        {errors.número && <span>{errors.número}</span>}
+                      </InputContainer>
+
+                      <InputContainer width="25%">
+                        <label>CVC:</label>
+                        <InputMask
+                          mask="999"
+                          required
+                          value={paymentData.CVC}
+                          onChange={(e) =>
+                            setPaymentData({
+                              ...paymentData,
+                              CVC: e.target.value,
+                            })
+                          }
+                        >
+                          {(inputProps: any) => (
+                            <Input
+                              {...inputProps}
+                              required
+                            />
+                          )}
+                        </InputMask>
+                        {errors.CVC && <span>{errors.CVC}</span>}
+                      </InputContainer>
+                    </Flex>
+                    <Flex>
+                      <InputContainer>
+                        <label>Mês de vencimento:</label>
+                        <InputContent>
+                          <InputMask
+                            mask="99"
+                            required
+                            value={paymentData.validadeMes}
+                            onChange={(e) =>
+                              setPaymentData({
+                                ...paymentData,
+                                validadeMes: e.target.value,
+                              })
+                            }
+                          >
+                            {(inputProps: any) => <Input {...inputProps} />}
+                          </InputMask>
+
+                        </InputContent>
+                        {errors.validadeMes || errors.validadeAno ? (
+                          <span>{errors.validadeMes || errors.validadeAno}</span>
+                        ) : null}
+                      </InputContainer>
+
+                      <InputContainer>
+                        <label>Ano de vencimento:</label>
 
                         <InputMask
                           mask="9999"
-                          placeholder="AAAA"
+
                           required
                           value={paymentData.validadeAno}
                           onChange={(e) =>
@@ -567,12 +579,8 @@ const Sidebar = ({
                         >
                           {(inputProps: any) => <Input {...inputProps} />}
                         </InputMask>
-                      </InputContent>
-                      {errors.validadeMes || errors.validadeAno ? (
-                        <span>{errors.validadeMes || errors.validadeAno}</span>
-                      ) : null}
-                    </InputContainer>
-
+                      </InputContainer>
+                    </Flex>
                     <Button
                       width='100%'
                       background='#FFEBD9'
@@ -580,6 +588,16 @@ const Sidebar = ({
                       onClick={handleSubmit}
                     >
                       Finalizar Compra
+                    </Button>
+
+
+                    <Button
+                      width="100%"
+                      background="#FFEBD9"
+                      color="#E66767"
+                      onClick={() => setStep("delivery")}
+                    >
+                      Voltar para edição de endereço
                     </Button>
                   </Pagamento>
                 </>

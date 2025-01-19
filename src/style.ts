@@ -12,6 +12,10 @@ export const GlobalStyle = createGlobalStyle`
     @media (max-width: 1024px) {
         overflow-x: hidden;
     }
+
+    body {
+        background-color: #FFF8F2;
+    }
 }
 
 

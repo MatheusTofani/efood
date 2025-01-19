@@ -14,13 +14,13 @@ justify-content: space-between;
 export const Redes = styled.div`
 color: #ffebd9;
 background-color: #E66767;
-width: 40px;
-height: 40px;
+width: 25px;
+height: 25px;
 border-radius: 50%;
 display: flex;
 align-items: center;
 justify-content: center;
-font-size: 20px;
+font-size: 14px;
 
 
 :hover {
@@ -31,5 +31,13 @@ font-size: 20px;
 
 export const RedesContainer = styled.div`
 display: flex;
-gap: 20px;
+gap: 10px;
+margin-top: 30px;
+`
+
+export const ContainerFooter = styled.div`
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: space-between;
 `

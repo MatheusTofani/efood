@@ -84,7 +84,7 @@ const PratosRestaurante = () => {
               {prato.descricao}
             </Title>
             <Button
-              background="#fff"
+              background= " #FFEBD9"
               color="#E66767"
               width="100%"
               onClick={() => handleOpenModal(prato)}
@@ -103,7 +103,7 @@ const PratosRestaurante = () => {
             <Title size="14px" weight="400" color="#fff">{selectedPrato.descricao}</Title>
             <Title size="14px" weight="400" color="#fff">{selectedPrato.info}</Title>
             <Button
-              background="#fff"
+              background="#FFEBD9"
               color="#e66767"
               width="218px"
               onClick={() => handleAddToCart(selectedPrato)}

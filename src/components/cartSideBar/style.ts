@@ -92,9 +92,10 @@ export const Input = styled.input<WidthProps>`
  }
 `;
 
-export const InputContainer = styled.div`
+export const InputContainer = styled.div<WidthProps>`
   display: flex;
   flex-direction: column;
+  width: ${(props) => props.width || "auto"};
 `;
 
 export const InputFlex = styled.div`
@@ -131,4 +132,9 @@ export const ConfirmationMessage = styled.div`
     color: #333;
     border-radius: 4px;
   }
+`;
+
+export const Flex = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
