@@ -19,7 +19,7 @@ export const Title = styled.div<TitleProps>`
   text-align: ${(props) => props.center || "left"};
   line-height: ${(props) => props.lineHeight || "normal"};
   margin: ${(props) => props.margin || "0"};;
-  z-index: 1;
+  z-index: 0;
 `;
 
 

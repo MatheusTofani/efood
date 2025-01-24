@@ -15,6 +15,12 @@ align-items: center;
 }
 `
 
+export const Flex = styled.div`
+display: flex;
+align-items: center;
+justify-content: space-between;
+`
+
 export const TitleContainer = styled.div`
 transition: 0.3s ease;
   &:hover {

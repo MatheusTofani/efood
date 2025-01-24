@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Logo from "../../components/logo";
 import { Title } from "../../components/title/style";
-import { HeaderContainer, TitleContainer } from "./style";
+import { Flex, HeaderContainer, TitleContainer } from "./style";
 import CartSidebar from "../../components/cartSideBar";
+import { Container } from "../../components/container/style";
 
 const Header = () => {
   const [isCartOpen, setCartOpen] = useState(false);
@@ -27,7 +28,8 @@ const Header = () => {
   return (
     <>
       <HeaderContainer>
-       
+       <Container >
+        <Flex>
         <Title
           center="center"
           size="20px"
@@ -48,9 +50,11 @@ const Header = () => {
           onClick={toggleCart}
         >
            <TitleContainer>
-          Carrinho ({totalItems})
+           ({totalItems}) produto(s) no carrinho 
           </TitleContainer>
         </Title>
+        </Flex>
+        </Container>
       </HeaderContainer>
       <CartSidebar isOpen={isCartOpen} onClose={toggleCart} />
     </>

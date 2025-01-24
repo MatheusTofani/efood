@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Title } from "../../components/title/style";
 import { Container } from "../../components/container/style";
-import { CardPratos, Grid, ModalContent, Modalimage, PratoImage } from "./style.ts";
+import { CardPratos, Grid, PratoImage } from "./style.ts";
 import { Button } from "../../components/button/style.ts";
-import Modal from "../../components/modal";
+import PratosModal from "../../components/modal";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../store/cartSlice";
 
@@ -84,7 +84,7 @@ const PratosRestaurante = () => {
               {prato.descricao}
             </Title>
             <Button
-              background= " #FFEBD9"
+              background="#FFEBD9"
               color="#E66767"
               width="100%"
               onClick={() => handleOpenModal(prato)}
@@ -96,22 +96,12 @@ const PratosRestaurante = () => {
       </Grid>
 
       {selectedPrato && (
-        <Modal onClose={handleCloseModal}>
-          <Modalimage src={selectedPrato.imagem} alt={selectedPrato.nome} />
-          <ModalContent>
-            <Title size="24px" weight="700" color="#fff">{selectedPrato.nome}</Title>
-            <Title size="14px" weight="400" color="#fff">{selectedPrato.descricao}</Title>
-            <Title size="14px" weight="400" color="#fff">{selectedPrato.info}</Title>
-            <Button
-              background="#FFEBD9"
-              color="#e66767"
-              width="218px"
-              onClick={() => handleAddToCart(selectedPrato)}
-            >
-              Adicionar ao carrinho - R$ {selectedPrato.valor.toFixed(2)}
-            </Button>
-          </ModalContent>
-        </Modal>
+        <PratosModal
+          isOpen={!!selectedPrato}
+          onRequestClose={handleCloseModal}
+          prato={selectedPrato}
+          onAddToCart={() => handleAddToCart(selectedPrato)}
+        />
       )}
     </Container>
   );
